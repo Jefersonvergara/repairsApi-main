@@ -1,4 +1,4 @@
-const User = require("../models/users.model");
+const User = require('../models/users.model');
 
 exports.finderId = async (req, res, next) => {
   try {
@@ -14,15 +14,18 @@ exports.finderId = async (req, res, next) => {
 
     if (!user) {
       return res.status(404).json({
-        message: 'User not Found',
+        status: 'error',
+        message: 'User not found',
       });
     }
+
     req.user = user;
+
     next();
   } catch {
     return res.status(500).json({
-        status: 'fail',
-        message: 'Something went very wrong! 🧨',
-      });
+      status: 'fail',
+      message: 'Something went very wrong! 🧨',
+    });
   }
 };

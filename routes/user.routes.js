@@ -14,20 +14,34 @@ const router = Router();
 
 router.get('/', findAllUsers);
 
-router.get('/:id',finderId, findOneUser);
+router.get('/:id', finderId, findOneUser);
 
-router.post('/',[
-  check( 'name', 'The user name must mandatory').not().isEmpty(),
-  check( 'email', 'The user name must mandatory').not().isEmpty(),
-  check( 'email', 'The email must be a correct format').isEmail(),
-  check('password','The password must be a correct format').not().isEmpty(),
-  validateFields,
-], 
-createUser);
+router.post(
+  '/',
+  [
+    check('name', 'The user name must mandatory').not().isEmpty(),
+    check('email', 'The user name must mandatory').not().isEmpty(),
+    check('email', 'The email must be a correct format').isEmail(),
+    check('password', 'The password must be a correct format').not().isEmpty(),
+    validateFields,
+  ],
+  createUser
+);
 
-router.patch('/:id',finderId, updateUser);
+router.patch(
+  '/:id',
+  [
+    check('name', 'The user name must mandatory').not().isEmpty(),
+    check('email', 'The user name must mandatory').not().isEmpty(),
+    check('email', 'The email must be a correct format').isEmail(),
 
-router.delete('/:id',finderId, deleteUser);
+    validateFields,
+  ],
+  finderId,
+  updateUser
+);
+
+router.delete('/:id', finderId, deleteUser);
 
 module.exports = {
   userRouter: router,

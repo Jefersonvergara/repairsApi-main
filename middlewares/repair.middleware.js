@@ -1,10 +1,9 @@
-const Repair = require("../models/repairs.models");
-const User = require("../models/users.model");
+const Repair = require('../models/repairs.models');
+const User = require('../models/users.model');
 
-exports.validateStatus = async(req,res,next) =>{
-
-    try {
-        const { id } = req.params;
+exports.validateStatus = async (req, res, next) => {
+  try {
+    const { id } = req.params;
 
     const repair = await Repair.findOne({
       where: {
@@ -20,15 +19,13 @@ exports.validateStatus = async(req,res,next) =>{
       });
     }
 
-
     req.repair = repair;
-    next();
-        
-    } catch (error) {
-        res.status(500).json({
-          status: 'fail',
-          message: 'Something went very wrong! 🧨',
-        });
-      }
 
-}
+    next();
+  } catch {
+    return res.status(500).json({
+      status: 'fail',
+      message: 'Something went very wrong! 🧨',
+    });
+  }
+};

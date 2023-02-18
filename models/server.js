@@ -3,6 +3,9 @@ const cors = require('cors');
 const { db } = require('../database/db');
 const { userRouter } = require('../routes/user.routes');
 const { repairRouter } = require('../routes/repair.routes');
+const initModel = require('./initModel');
+const AppError = require('../utils/AppError');
+const globalErrorHandler = require('../controllers/error.controller');
 
 class Server {
   constructor() {
@@ -33,6 +36,13 @@ class Server {
   routes() {
     this.app.use(this.paths.users, userRouter);
     this.app.use(this.paths.repairs, repairRouter);
+    this.app.all('*', (req, res, next) => {
+      return next(
+        new AppError(`Cant find ${req.originalUrl} on this server!`, 404)
+      );
+    });
+
+    this.app.use(globalErrorHandler);
   }
 
   database() {
@@ -41,6 +51,7 @@ class Server {
       .catch(err => console.log(err));
 
     //relations
+    initModel();
 
     db.sync()
       .then(() => console.log('Database synced 😁'))

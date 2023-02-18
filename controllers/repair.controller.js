@@ -1,91 +1,63 @@
 const Repair = require('../models/repairs.models');
+const catchAsync = require('../utils/catchAsync');
 
-exports.findAllRepairs = async (req, res) => { // muestra todas las reparaciones
-  try {
-    const repairs = await Repair.findAll({
-      attributes: ['id', 'date', 'userId'],
-      where: {
-        status: 'pending',
-      },
-    });
+exports.findAllRepairs = catchAsync(async (req, res, next) => {
+  const repairs = await Repair.findAll({
+    attributes: ['id', 'date', 'userId'],
+    where: {
+      status: 'pending',
+    },
+  });
 
-    return res.status(200).json({
-      status: 'success',
-      repairs,
-    });
-  } catch {
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Somethin went very wront! 🧨',
-    });
-  }
-};
-exports.findOneRepair = async (req, res) => {// muestra una repacion por id solicitado
-  try {
-    const { repair } = req;
+  return res.status(200).json({
+    status: 'success',
+    repairs,
+  });
+});
 
-    return res.status(200).json({
-      status: 'success',
-      repair,
-    });
-  } catch {
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Somethin went very wront! 🧨',
-    });
-  }
-};
-exports.createRepair = async (req, res) => { // crea una neva reparaccion
-  try {
-    const { date, userId,motorNumber,description } = req.body;
+exports.findOneRepair = catchAsync(async (req, res, next) => {
+  const { repair } = req;
 
-    const repair = await Repair.create({ date, userId,motorNumber,description });
+  return res.status(200).json({
+    status: 'success',
+    repair,
+  });
+});
 
-    return res.status(201).json({
-      status: 'success',
-      message: 'Created Repair',
-      repair,
-    });
-  } catch {
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Somethin went very wront! 🧨',
-    });
-  }
-};
-exports.updateRepair = async (req, res) => { //se encarga de actualizar el status de una reparaccion
-  try {
-    
-    const { repair } = req;
-    const { status } = req.body;
+exports.createRepair = catchAsync(async (req, res, next) => {
+  const { date, userId, motorNumber, description } = req.body;
 
+  const repair = await Repair.create({
+    date,
+    userId,
+    motorNumber,
+    description,
+  });
 
-    await repair.update({ status });
+  return res.status(201).json({
+    status: 'success',
+    message: 'Created Repair',
+    repair,
+  });
+});
 
-    return res.status(200).json({
-      status: 'success',
-    });
-  } catch {
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Somethin went very wront! 🧨',
-    });
-  }
-};
-exports.deleteRepair = async (req, res) => {  //se encarga de eliminar una reparacion
-  try {
-    const { repair } = req;
+exports.updateRepair = catchAsync(async (req, res, next) => {
+  const { repair } = req;
+  const { status } = req.body;
 
+  await repair.update({ status });
 
-    await repair.update({ status: 'cancelled' });
+  return res.status(200).json({
+    status: 'Repair has been updated',
+  });
+});
 
-    return res.status(200).json({
-      status: 'success',
-    });
-  } catch {
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Somethin went very wront! 🧨',
-    });
-  }
-};
+exports.deleteRepair = catchAsync(async (req, res, next) => {
+  const { repair } = req;
+
+  await repair.update({ status: 'cancelled' });
+
+  return res.status(200).json({
+    status: 'The repair has been canceled',
+  });
+});
